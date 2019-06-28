@@ -26,12 +26,21 @@
 #include <string.h>
 #include <time.h>
 
-#ifdef WIN32
+#if defined(__MINGW32__) || defined(WIN32)
+
+#if defined(__MINGW32__)
+    //#define _WIN32_WINNT 0x0601
+    //#include <minwinbase.h>
+#endif
 
 #include <winsock2.h>
-#include <sys/timeb.h>
 #include <windows.h>
+
+#include <sys/timeb.h>
 #include <process.h>
+#include <stdint.h>
+#include <pthread.h>
+#include <sys/types.h>
 
 #elif defined(__linux__)
 

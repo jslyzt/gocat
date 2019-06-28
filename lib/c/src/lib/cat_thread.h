@@ -23,7 +23,7 @@
 
 #ifdef _WIN32
 
-typedef HANDLE pthread_t;
+//typedef HANDLE pthread_t;
 
 #define PTHREAD DWORD WINAPI
 

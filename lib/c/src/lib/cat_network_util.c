@@ -21,12 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
-#ifdef WIN32
-
-// TODO win32 header files.
-
-#else
+#if defined(__linux) || defined(__APPLE__) 
 
 #include <arpa/inet.h>
 #include <ifaddrs.h>
@@ -34,12 +31,19 @@
 #include <netdb.h>
 #include <unistd.h>
 
+
+#elif defined(__MINGW32__) || defined(WIN32) 
+
+#include <winsock2.h>
+#include <windows.h>
+#include "typedef.h"
+
+#endif
+
 #define    NI_MAXHOST       1025
 #define    NI_NUMERICHOST   0x00000002
 #define    IFF_UP           0x1
 #define    IFF_LOOPBACK     0x8
-
-#endif
 
 int ipAddressLevel(struct in_addr *addr, int offset) {
     uint32_t a = addr->s_addr;
@@ -133,7 +137,7 @@ int getLocalHostIp(char *ip) {
     }
     struct in_addr inaddr;
     inaddr.s_addr = ipValue;
-    strcpy(ipBuf, inet_ntoa(inaddr));
+    strcpy(ip, inet_ntoa(inaddr));
     return 0;
 }
 
@@ -141,7 +145,6 @@ int getLocalHostIp(char *ip) {
 
 int getLocalHostIpHex(char *ipHexBuf) {
     char ip[64] = {0};
-
     if (getLocalHostIp(ip) < 0 || ip[0] == '\0') {
         return -1;
     }
@@ -149,7 +152,6 @@ int getLocalHostIpHex(char *ipHexBuf) {
     int a[4];
     sscanf(ip, "%d.%d.%d.%d", &a[0], &a[1], &a[2], &a[3]);
     sprintf(ipHexBuf, "%02x%02x%02x%02x", a[0], a[1], a[2], a[3]);
-
     return 0;
 }
 

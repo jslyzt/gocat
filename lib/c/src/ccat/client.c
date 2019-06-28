@@ -117,7 +117,9 @@ int catClientInitWithConfig(const char *appkey, CatClientConfig* config) {
     }
     g_cat_init = 1;
 
+#ifndef WIN32
     signal(SIGPIPE, SIG_IGN);
+#endif
 
     initCatClientConfig(config);
 

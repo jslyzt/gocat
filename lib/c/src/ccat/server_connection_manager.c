@@ -336,19 +336,21 @@ void clearCatServerConnManager() {
 int socketConnected(int sock) {
 #if defined(__APPLE__)
     return 1;
-#else
-    if (sock <= 0)
+#elif defined(__linux__)
+    if (sock <= 0) {
         return 0;
-
+    }
     struct tcp_info info;
     int len = sizeof(info);
-    getsockopt(sock, IPPROTO_TCP, TCP_INFO, &info, (socklen_t *) &len);
+    getsockopt(sock, IPPROTO_TCP, TCP_INFO, &info, (socklen_t*) &len);
 
     if (info.tcpi_state == 1) {
         return 1;
     } else {
         return 0;
     }
+#elif defined(WIN32)
+    return 1;
 #endif
 }
 

@@ -153,7 +153,7 @@ static int sendCatMessageBufferDirectly(sds sendBuf, size_t checkpoint) {
 
     while (nowSendLen != sendTotalLen) {
 #ifdef WIN32
-        sendLen = send(g_cat_send_fd, buf, sendTotalLen - nowSendLen, 0);
+        sendLen = send(g_cat_send_fd, sendBuf, sendTotalLen - nowSendLen, 0);
 #else
         // write()会把参数buf 所指的内存写入count 个字节到参数fd 所指的文件内. 当然, 文件读写位置也会随之移动.
         sendLen = write(g_cat_send_fd, sendBuf, sendTotalLen - nowSendLen);

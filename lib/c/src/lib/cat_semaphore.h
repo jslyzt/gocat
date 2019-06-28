@@ -23,7 +23,7 @@
 
 #include <semaphore.h>
 
-typedef HANDLE SEMA;
+//typedef HANDLE SEMA;
 #define SEMA_INIT(sema, initCount, maxCount) sema = CreateSemaphore(NULL, initCount, maxCount, NULL)
 #define SEMA_POST(sema) ReleaseSemaphore(sema, 1, NULL)
 #define SEMA_WAIT(sema) WaitForSingleObject(sema, INFINITE)

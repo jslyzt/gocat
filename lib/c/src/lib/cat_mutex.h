@@ -19,44 +19,7 @@
 #ifndef CCAT_CAT_MUTEX_H
 #define CCAT_CAT_MUTEX_H
 
-#ifdef WIN32
-
-typedef LPCRITICAL_SECTION CATCRITICALSECTION;
-#define INVALID_CRITSECT NULL
-
-static inline CATCRITICALSECTION CATCreateCriticalSection()
-{
-    CATCRITICALSECTION cs = (CRITICAL_SECTION *)malloc(sizeof(CRITICAL_SECTION));
-    //assert(cs != INVALID_CRITSECT);
-    if (0)
-    {
-        InitializeCriticalSection(cs);
-    }
-    else
-    {
-        InitializeCriticalSectionAndSpinCount(cs, 4000);
-    }
-    return cs;
-}
-
-static inline void CATDeleteCriticalSection(CATCRITICALSECTION cs) {
-    if (cs != INVALID_CRITSECT) {
-        DeleteCriticalSection(cs);
-        free(cs);
-        cs = 0;
-    }
-}
-
-#define CATCS_ENTER(cs) EnterCriticalSection(cs)
-#define CATCS_LEAVE(cs) LeaveCriticalSection(cs)
-
-#define MUTEX CRITICAL_SECTION
-#define MUTEX_LOCK(mutex) EnterCriticalSection(&mutex)
-#define MUTEX_UNLOCK(mutex) LeaveCriticalSection(&mutex)
-#define MUTEX_INIT(mutex) InitializeCriticalSection(&mutex)
-#define MUTEX_DESTROY(mutex) DeleteCriticalSection(&mutex)
-
-#elif defined(__linux) || defined(__APPLE__)
+#if defined(__linux) || defined(__APPLE__) || defined(__MINGW32__)
 
 #include <pthread.h>
 #include <stdlib.h>
@@ -98,6 +61,43 @@ static inline void CATDeleteCriticalSection(CATCRITICALSECTION cs) {
 #define MUTEX_UNLOCK(mutex) pthread_mutex_unlock(&mutex)
 #define MUTEX_INIT(mutex) pthread_mutex_init(&mutex, NULL)
 #define MUTEX_DESTROY(mutex) pthread_mutex_destroy(&mutex)
+
+#else
+
+typedef LPCRITICAL_SECTION CATCRITICALSECTION;
+#define INVALID_CRITSECT NULL
+
+static inline CATCRITICALSECTION CATCreateCriticalSection()
+{
+    CATCRITICALSECTION cs = (CRITICAL_SECTION *)malloc(sizeof(CRITICAL_SECTION));
+    //assert(cs != INVALID_CRITSECT);
+    if (0)
+    {
+        InitializeCriticalSection(cs);
+    }
+    else
+    {
+        InitializeCriticalSectionAndSpinCount(cs, 4000);
+    }
+    return cs;
+}
+
+static inline void CATDeleteCriticalSection(CATCRITICALSECTION cs) {
+    if (cs != INVALID_CRITSECT) {
+        DeleteCriticalSection(cs);
+        free(cs);
+        cs = 0;
+    }
+}
+
+#define CATCS_ENTER(cs) EnterCriticalSection(cs)
+#define CATCS_LEAVE(cs) LeaveCriticalSection(cs)
+
+#define MUTEX CRITICAL_SECTION
+#define MUTEX_LOCK(mutex) EnterCriticalSection(&mutex)
+#define MUTEX_UNLOCK(mutex) LeaveCriticalSection(&mutex)
+#define MUTEX_INIT(mutex) InitializeCriticalSection(&mutex)
+#define MUTEX_DESTROY(mutex) DeleteCriticalSection(&mutex)
 
 #endif
 
