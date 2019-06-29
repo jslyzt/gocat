@@ -3,8 +3,8 @@ package ccat
 /*
 #cgo CFLAGS: -I./include
 #cgo darwin LDFLAGS: -L${SRCDIR}/lib/darwin/ -lcatclient -Wl,-rpath,./darwin
-#cgo windows LDFLAGS: -L${SRCDIR}/lib/windows/ -lcatclient -lm -Wl,-rpath,./windows
-#cgo linux LDFLAGS: -L${SRCDIR}/lib/linux/ -lcatclient -lm -Wl,-rpath,./linux
+#cgo windows LDFLAGS: -L${SRCDIR}/lib/windows/ -lcatclient -lm -lpthreadGC2 -lwsock32 -lws2_32 -Wl,-rpath,./windows
+#cgo linux LDFLAGS: -L${SRCDIR}/lib/linux/ -lcatclient -lm -lpthread -Wl,-rpath,./linux
 
 #include <stdlib.h>
 #include "ccat.h"
@@ -95,15 +95,14 @@ func LogTransaction(trans *Transaction) {
 		cstatus = C.CString(trans.Status)
 		cdata   = C.CString(trans.GetData().String())
 	)
-	defer C.free(unsafe.Pointer(ctype))
-	defer C.free(unsafe.Pointer(cname))
-	defer C.free(unsafe.Pointer(cstatus))
-	defer C.free(unsafe.Pointer(cdata))
+	defer func() {
+		C.free(unsafe.Pointer(ctype))
+		C.free(unsafe.Pointer(cname))
+		C.free(unsafe.Pointer(cstatus))
+		C.free(unsafe.Pointer(cdata))
+	}() 
 	C.callLogTransaction(
-		ctype,
-		cname,
-		cstatus,
-		cdata,
+		ctype, cname, cstatus, cdata,
 		C.ulonglong(trans.GetTimestamp()/1000/1000),
 		C.ulonglong(trans.GetTimestamp()/1000/1000),
 		C.ulonglong(trans.GetDuration()/1000/1000),
@@ -118,16 +117,14 @@ func LogEvent(event *Event) {
 		cstatus = C.CString(event.Status)
 		cdata   = C.CString(event.GetData().String())
 	)
-	defer C.free(unsafe.Pointer(ctype))
-	defer C.free(unsafe.Pointer(cname))
-	defer C.free(unsafe.Pointer(cstatus))
-	defer C.free(unsafe.Pointer(cdata))
-
+	defer func() {
+		C.free(unsafe.Pointer(ctype))
+		C.free(unsafe.Pointer(cname))
+		C.free(unsafe.Pointer(cstatus))
+		C.free(unsafe.Pointer(cdata))
+	}() 
 	C.callLogEvent(
-		ctype,
-		cname,
-		cstatus,
-		cdata,
+		ctype, cname, cstatus, cdata,
 		C.ulonglong(event.GetTimestamp()/1000/1000),
 	)
 }
