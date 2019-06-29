@@ -1,4 +1,4 @@
-package cat
+package gcat
 
 import (
 	"time"
@@ -6,22 +6,27 @@ import (
 	"github.com/jslyzt/gocat/ccat"
 )
 
-type catInstance struct {
+// CatInstance cat实例
+type CatInstance struct {
 }
 
-func Instance() *catInstance {
-	return &catInstance{}
+// Instance 实例
+func Instance() *CatInstance {
+	return &CatInstance{}
 }
 
-func (t *catInstance) flush(m ccat.Messager) {
+// flush 输出
+func (t *CatInstance) flush(m ccat.Messager) {
 	ccat.Send(m)
 }
 
-func (t *catInstance) NewTransaction(mtype, name string) *ccat.Transaction {
+// NewTransaction 新建事务
+func (t *CatInstance) NewTransaction(mtype, name string) *ccat.Transaction {
 	return ccat.NewTransaction(mtype, name, t.flush)
 }
 
-func (t *catInstance) NewCompletedTransactionWithDuration(mtype, name string, durationInNano int64) {
+// NewCompletedTransactionWithDuration 新建超时完成事务
+func (t *CatInstance) NewCompletedTransactionWithDuration(mtype, name string, durationInNano int64) {
 	var trans = t.NewTransaction(mtype, name)
 	trans.SetDuration(durationInNano)
 	if durationInNano > 0 && durationInNano < 60*time.Second.Nanoseconds() {
@@ -31,19 +36,22 @@ func (t *catInstance) NewCompletedTransactionWithDuration(mtype, name string, du
 	trans.Complete()
 }
 
-func (t *catInstance) NewEvent(mtype, name string) *ccat.Event {
+// NewEvent 新建事件
+func (t *CatInstance) NewEvent(mtype, name string) *ccat.Event {
 	return &ccat.Event{
 		Message: *ccat.NewMessage(mtype, name, t.flush),
 	}
 }
 
-func (t *catInstance) NewHeartbeat(mtype, name string) *ccat.Heartbeat {
+// NewHeartbeat 新建心跳
+func (t *CatInstance) NewHeartbeat(mtype, name string) *ccat.Heartbeat {
 	return &ccat.Heartbeat{
 		Message: *ccat.NewMessage(mtype, name, t.flush),
 	}
 }
 
-func (t *catInstance) LogEvent(mtype, name string, args ...string) {
+// LogEvent 日志事件
+func (t *CatInstance) LogEvent(mtype, name string, args ...string) {
 	var e = t.NewEvent(mtype, name)
 	if len(args) > 0 {
 		e.SetStatus(args[0])
@@ -54,7 +62,8 @@ func (t *catInstance) LogEvent(mtype, name string, args ...string) {
 	e.Complete()
 }
 
-func (t *catInstance) LogError(err error, args ...string) {
+// LogError 日志错误
+func (t *CatInstance) LogError(err error, args ...string) {
 	var category = "error"
 	if len(args) > 0 {
 		category = args[0]
@@ -66,7 +75,8 @@ func (t *catInstance) LogError(err error, args ...string) {
 	e.Complete()
 }
 
-func (t *catInstance) LogMetricForCount(mname string, args ...int) {
+// LogMetricForCount 日志调节
+func (t *CatInstance) LogMetricForCount(mname string, args ...int) {
 	if len(args) == 0 {
 		ccat.LogMetricForCount(mname, 1)
 	} else {
@@ -74,6 +84,7 @@ func (t *catInstance) LogMetricForCount(mname string, args ...int) {
 	}
 }
 
-func (t *catInstance) LogMetricForDuration(mname string, duration int64) {
+// LogMetricForDuration 日志条件
+func (t *CatInstance) LogMetricForDuration(mname string, duration int64) {
 	ccat.LogMetricForDuration(mname, duration)
 }

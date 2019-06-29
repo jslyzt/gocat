@@ -1,4 +1,4 @@
-package cat
+package gcat
 
 import (
 	"bytes"

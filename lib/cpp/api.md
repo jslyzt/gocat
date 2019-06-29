@@ -48,7 +48,7 @@ void metric() {
 int main() {
     cat::Config c = cat::Config();
     c.enableDebugLog = true;
-    c.encoderType = cat::ENCODER_TEXT;
+    c.encoderType = cat::ENCoderText;
     cat::init("cppcat", c);
 
     for (int i = 0; i < 100; i++) {
@@ -89,7 +89,7 @@ void init(const string& domain);
 ```cpp
 cat::Config c = cat::Config();
 c.enableDebugLog = true;
-c.encoderType = cat::ENCODER_TEXT;
+c.encoderType = cat::ENCoderText;
 cat::init("cppcat", c);
 ```
 

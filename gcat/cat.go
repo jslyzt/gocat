@@ -1,10 +1,10 @@
-package cat
+package gcat
 
-import "C"
 import (
 	"github.com/jslyzt/gocat/ccat"
 )
 
+// Config 配置
 type Config struct {
 	EncoderType     int
 	EnableHeartbeat int
@@ -12,25 +12,17 @@ type Config struct {
 	EnableDebugLog  int
 }
 
+// DefaultConfig 默认配置
 func DefaultConfig() Config {
-	return Config{
-		ENCODER_BINARY,
-		1,
-		1,
-		0,
-	}
+	return Config{ ENCoderBinary, 1, 1, 0, }
 }
 
+// DefaultConfigForCat2 cat2默认配置
 func DefaultConfigForCat2() Config {
-	return Config{
-		ENCODER_TEXT,
-		1,
-		0,
-		0,
-	}
+	return Config{ ENCoderText, 1, 0, 0, }
 }
 
-
+// Init 初始化
 func Init(domain string, configs ...Config) {
 	var config Config;
 	if len(configs) > 1 {
@@ -47,13 +39,16 @@ func Init(domain string, configs ...Config) {
 		config.EnableSampling,
 		config.EnableDebugLog,
 	))
+
 	go ccat.Background()
 }
 
+// Shutdown 关闭
 func Shutdown() {
 	ccat.Shutdown()
 }
 
+// Wait 等待
 func Wait() {
 	ccat.Wait()
 }

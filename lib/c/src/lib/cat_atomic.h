@@ -23,11 +23,11 @@
 
 #define ATOMICLONG volatile long
 
-#define ATOMICLONG_INC(pAtomicInt) InterlockedIncrement(pAtomicInt)
-#define ATOMICLONG_DEC(pAtomicInt) InterlockedDecrement(pAtomicInt)
-#define ATOMICLONG_ADD(pAtomicInt, addVal) InterlockedAdd(pAtomicInt, addVal)
-#define ATOMICLONG_FAA(pAtomicInt, addVal) InterlockedExchangeAdd(pAtomicInt, addVal)
-#define ATOMICLONG_CAS(pAtomicInt, expect, update) InterlockedCompareExchange(pAtomicInt, update, expect)
+#define ATOMICLONG_INC(pAtomicInt) _InterlockedIncrement(pAtomicInt)
+#define ATOMICLONG_DEC(pAtomicInt) _InterlockedDecrement(pAtomicInt)
+#define ATOMICLONG_ADD(pAtomicInt, addVal) _InterlockedAdd(pAtomicInt, addVal)
+#define ATOMICLONG_FAA(pAtomicInt, addVal) _InterlockedExchangeAdd(pAtomicInt, addVal)
+#define ATOMICLONG_CAS(pAtomicInt, expect, update) _InterlockedCompareExchange(pAtomicInt, update, expect)
 
 #elif defined(__linux) || defined(__APPLE__)
 

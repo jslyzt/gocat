@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <chrono>
 #include <unistd.h>
 
 #include "client.hpp"
@@ -48,7 +49,7 @@ int main() {
     cout << "cppcat version: " << cat::version() << endl;
 
     cat::Config c = cat::Config();
-    c.encoderType = cat::ENCODER_BINARY;
+    c.encoderType = cat::ENCoderBinary;
     cat::init("cppcat", c);
 
     for (int i = 0; i < 100; i++) {

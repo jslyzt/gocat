@@ -1,4 +1,4 @@
-package cat
+package gcat
 
 import (
 	"runtime"
@@ -7,7 +7,6 @@ import (
 
 func Test_functionName(t *testing.T) {
 	var skip = 0
-
 	var names = []string{
 		"gocat.Test_functionName",
 		"testing.tRunner",

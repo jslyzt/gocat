@@ -29,12 +29,12 @@ namespace cat {
     const string FAIL = "-1";
     const string ERROR = "ERROR";
 
-    const int ENCODER_TEXT = 0;
-    const int ENCODER_BINARY  = 1;
+    const int ENCoderText = 0;
+    const int ENCoderBinary  = 1;
 
     class Config {
     public:
-        int encoderType = ENCODER_BINARY;
+        int encoderType = ENCoderBinary;
         bool enableHeartbeat = true;
         bool enableSampling = true;
         bool enableMultiprocessing = false;

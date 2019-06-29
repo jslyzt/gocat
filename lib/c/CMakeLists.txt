@@ -68,9 +68,9 @@ set(
 
 if (APPLE)
 elseif(UNIX)
-    link_libraries(m)
-    link_libraries(rt)
-    link_libraries(pthread)
+    link_libraries(m rt pthread)
+elseif(WIN32)
+    link_libraries(m pthreadGC2 wsock32 ws2_32)
 endif()
 
 set(HEADER_FILES include/client.h ${HEADER_FILES})

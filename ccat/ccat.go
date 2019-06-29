@@ -5,31 +5,32 @@ package ccat
 #cgo darwin LDFLAGS: -L${SRCDIR}/lib/darwin/ -lcatclient -Wl,-rpath,./darwin
 #cgo windows LDFLAGS: -L${SRCDIR}/lib/windows/ -lcatclient -lm -Wl,-rpath,./windows
 #cgo linux LDFLAGS: -L${SRCDIR}/lib/linux/ -lcatclient -lm -Wl,-rpath,./linux
+
 #include <stdlib.h>
 #include "ccat.h"
 */
 import "C"
+
 import (
 	"runtime"
 	"sync"
 	"unsafe"
 )
 
-var ch = make(chan interface{}, 128)
-var wg sync.WaitGroup
+var (
+	ch = make(chan interface{}, 128)
+	wg sync.WaitGroup
+)
 
+// Init 初始化
 func Init(domain string) {
-	var c_domain = C.CString(domain)
-	defer C.free(unsafe.Pointer(c_domain))
-	C.catClientInit(c_domain)
+	var cdomain = C.CString(domain)
+	defer C.free(unsafe.Pointer(cdomain))
+	C.catClientInit(cdomain)
 }
 
-func BuildConfig(
-	encoderType,
-	enableHeartbeat,
-	enableSampling,
-	enableDebugLog int,
-) C.CatClientConfig {
+// BuildConfig 创建配置
+func BuildConfig( encoderType, enableHeartbeat,	enableSampling,	enableDebugLog int,) C.CatClientConfig {
 	return C.CatClientConfig{
 		C.int(encoderType),
 		C.int(enableHeartbeat),
@@ -39,12 +40,14 @@ func BuildConfig(
 	}
 }
 
+// InitWithConfig 使用配置文件初始化
 func InitWithConfig(domain string,  _config C.CatClientConfig) {
-	var _domain = C.CString(domain)
-	defer C.free(unsafe.Pointer(_domain))
-	C.catClientInitWithConfig(_domain, &_config)
+	var cdomain = C.CString(domain)
+	defer C.free(unsafe.Pointer(cdomain))
+	C.catClientInitWithConfig(cdomain, &_config)
 }
 
+// Background 工作线程
 func Background() {
 	// We need running ccat functions on the same thread due to ccat is using a thread local.
 	runtime.LockOSThread()
@@ -63,23 +66,28 @@ func Background() {
 	}
 }
 
+// Shutdown 关闭
 func Shutdown() {
 	close(ch)
 }
 
+// Wait 等待
 func Wait() {
 	wg.Wait()
 }
 
+// ShutdownAndWait 等待关闭
 func ShutdownAndWait() {
 	Shutdown()
 	Wait()
 }
 
+// Send 发送数据
 func Send(m Messager) {
 	ch <- m
 }
 
+// LogTransaction 日志处理
 func LogTransaction(trans *Transaction) {
 	var (
 		ctype   = C.CString(trans.Type)
@@ -102,6 +110,7 @@ func LogTransaction(trans *Transaction) {
 	)
 }
 
+// LogEvent 日志事件
 func LogEvent(event *Event) {
 	var (
 		ctype   = C.CString(event.Type)
@@ -123,6 +132,7 @@ func LogEvent(event *Event) {
 	)
 }
 
+// LogMetricForCount 日志调节
 func LogMetricForCount(name string, count int) {
 	var cname = C.CString(name)
 	defer C.free(unsafe.Pointer(cname))
@@ -132,6 +142,7 @@ func LogMetricForCount(name string, count int) {
 	)
 }
 
+// LogMetricForDuration 日志条件
 func LogMetricForDuration(name string, durationInNano int64) {
 	var cname = C.CString(name)
 	defer C.free(unsafe.Pointer(cname))

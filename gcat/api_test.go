@@ -1,4 +1,4 @@
-package cat
+package gcat
 
 import (
 	"github.com/jslyzt/gocat/ccat"
