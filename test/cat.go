@@ -1,11 +1,10 @@
-package test
+package main
 
 import (
 	"errors"
-	"testing"
 	"time"
 
-	gocat "github.com/jslyzt/gocat/cat"
+	gocat "github.com/jslyzt/gocat/gcat"
 )
 
 var cat = gocat.Instance()
@@ -64,7 +63,7 @@ func run(f func()) {
 	}
 }
 
-func Test_Message_Case(t *testing.T) {
+func main() {
 	go run(case1)
 	go run(case2)
 	go run(case3)
