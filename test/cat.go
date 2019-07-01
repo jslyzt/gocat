@@ -3,13 +3,16 @@ package main
 import (
 	"errors"
 	"time"
+	"log"
 
 	gocat "github.com/jslyzt/gocat/gcat"
 )
 
-var cat = gocat.Instance()
-
-const TTYPE = "foo"
+// 变量定义
+var (
+	cat = gocat.Instance()
+	Ttype = "foo"
+) 
 
 func init() {
 	gocat.Init("gocat", gocat.DefaultConfigForCat2())
@@ -17,7 +20,7 @@ func init() {
 
 // send transaction
 func case1() {
-	t := cat.NewTransaction(TTYPE, "test")
+	t := cat.NewTransaction(Ttype, "test")
 	defer t.Complete()
 	t.AddData("testcase")
 	t.AddData("foo", "bar")
@@ -29,19 +32,19 @@ func case1() {
 
 // send completed transaction with duration
 func case2() {
-	cat.NewCompletedTransactionWithDuration(TTYPE, "completed", time.Second.Nanoseconds()*24)
-	cat.NewCompletedTransactionWithDuration(TTYPE, "completed-over-60s", time.Second.Nanoseconds()*65)
+	cat.NewCompletedTransactionWithDuration(Ttype, "completed", time.Second.Nanoseconds()*24)
+	cat.NewCompletedTransactionWithDuration(Ttype, "completed-over-60s", time.Second.Nanoseconds()*65)
 }
 
 // send event
 func case3() {
 	// way 1
-	e := cat.NewEvent(TTYPE, "event-1")
+	e := cat.NewEvent(Ttype, "event-1")
 	e.Complete()
 	// way 2
-	cat.LogEvent(TTYPE, "event-2")
-	cat.LogEvent(TTYPE, "event-3", gocat.FAIL)
-	cat.LogEvent(TTYPE, "event-4", gocat.FAIL, "foobar")
+	cat.LogEvent(Ttype, "event-2")
+	cat.LogEvent(Ttype, "event-3", gocat.FAIL)
+	cat.LogEvent(Ttype, "event-4", gocat.FAIL, "foobar")
 }
 
 // send error with backtrace
@@ -64,6 +67,7 @@ func run(f func()) {
 }
 
 func main() {
+	log.Println("----------------start----------------")
 	go run(case1)
 	go run(case2)
 	go run(case3)
@@ -73,4 +77,6 @@ func main() {
 	// wait until main process has been killed
 	var ch chan int
 	<-ch
+
+	log.Println("----------------end----------------")
 }

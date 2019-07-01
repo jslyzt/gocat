@@ -9,7 +9,6 @@ string(REGEX REPLACE "\n$" "" CCAT_VERSION "${CCAT_VERSION}")
 message(CCAT_VERSION: ${version})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/ccat/version.h)
-
 message(STATUS "Current OS: " ${CMAKE_SYSTEM_NAME})
 
 macro(use_c99)
@@ -30,6 +29,8 @@ use_c99()
 
 # set(BUILD_SCRIPT 1)
 
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -O0")
+
 add_definitions("-Wno-format-security")
 
 if (APPLE)
@@ -45,25 +46,25 @@ include_directories(src)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 
 set(
-        HEADER_FILES
-        include/client.h
-        src/lib/cat_atomic.h
-        src/lib/cat_condition.h
-        src/lib/cat_mutex.h
-        src/lib/cat_semaphore.h
-        src/lib/cat_test.h
-        src/lib/cat_thread.h
-        src/lib/headers.h
-        src/lib/typedef.h
+    HEADER_FILES
+    include/client.h
+    src/lib/cat_atomic.h
+    src/lib/cat_condition.h
+    src/lib/cat_mutex.h
+    src/lib/cat_semaphore.h
+    src/lib/cat_test.h
+    src/lib/cat_thread.h
+    src/lib/headers.h
+    src/lib/typedef.h
 )
 
 aux_source_directory(src/lib LIBRARY_FILES)
 aux_source_directory(src/ccat SOURCE_FILES)
 
 set(
-        SOURCE_FILES
-        ${SOURCE_FILES}
-        ${LIBRARY_FILES}
+    SOURCE_FILES
+    ${SOURCE_FILES}
+    ${LIBRARY_FILES}
 )
 
 if (APPLE)

@@ -2,9 +2,9 @@ package ccat
 
 /*
 #cgo CFLAGS: -I./include
-#cgo darwin LDFLAGS: -L${SRCDIR}/lib/darwin/ -lcatclient -Wl,-rpath,./darwin
-#cgo windows LDFLAGS: -L${SRCDIR}/lib/windows/ -lcatclient -lm -lpthreadGC2 -lwsock32 -lws2_32 -Wl,-rpath,./windows
-#cgo linux LDFLAGS: -L${SRCDIR}/lib/linux/ -lcatclient -lm -lpthread -Wl,-rpath,./linux
+#cgo darwin LDFLAGS: -L${SRCDIR}/lib/darwin/ -lcatclient
+#cgo windows LDFLAGS: -L${SRCDIR}/lib/windows/ -lcatclient -lm -lpthread -lwsock32 -lws2_32
+#cgo linux LDFLAGS: -L${SRCDIR}/lib/linux/ -lcatclient -lm -lpthread
 
 #include <stdlib.h>
 #include "ccat.h"
