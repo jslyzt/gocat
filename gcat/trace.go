@@ -37,10 +37,13 @@ func functionName(pc uintptr) string {
 	return fn.Name()
 }
 
-func newStacktrace(skip int, err error) (buf *bytes.Buffer) {
+// NewStackTrace 调用堆栈
+func NewStackTrace(skip int, estr string) (buf *bytes.Buffer) {
 	buf = bytes.NewBuffer([]byte{})
-	buf.WriteString(err.Error())
-	buf.WriteRune('\n')
+	if len(estr) > 0 {
+		buf.WriteString(estr)
+		buf.WriteRune('\n')
+	}
 	for i := skip; ; i++ {
 		pc, file, line, ok := runtime.Caller(i)
 		if !ok {

@@ -69,7 +69,7 @@ func (t *CatInstance) LogError(err error, args ...string) {
 		category = args[0]
 	}
 	var e = t.NewEvent("Exception", category)
-	var buf = newStacktrace(2, err)
+	var buf = NewStackTrace(2, err.Error())
 	e.SetStatus(ccat.FAIL)
 	e.AddData(buf.String())
 	e.Complete()
